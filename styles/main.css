@@ -1,0 +1,10 @@
+.btn-vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+.btn-vertical-center i {
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+}
