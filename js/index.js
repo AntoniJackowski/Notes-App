@@ -1,9 +1,14 @@
 const form = document.querySelector('#form');
 const titleInput = document.querySelector('#note-title');
 const descInput = document.querySelector('#note-desc');
-const submitBtn = document.querySelector('#submit-btn')
-const notesContainer = document.querySelector('#notes-container')
+const submitBtn = document.querySelector('#submit-btn');
+const offSortBtn = document.querySelector('#off-sort-btn');
+const ascSortBtn = document.querySelector('#asc-sort-btn');
+const dscSortBtn = document.querySelector('#dsc-sort-btn');
+const notesContainer = document.querySelector('#notes-container');
 let notes = [];
+let notesSort = [];
+let isSort = false;
 
 const getNoteElement = (title, desc, date, id) => {
     return `
@@ -44,9 +49,16 @@ const getDateFormat = (date) => {
 const renderNotes = () => {
     notesContainer.innerHTML = null;
 
-    notes.forEach((item) => {
-        notesContainer.innerHTML += getNoteElement(item.title, item.desc, getDateFormat(item.date), item.id);
-    });
+    if(isSort === false){
+        notes.forEach((item) => {
+            notesContainer.innerHTML += getNoteElement(item.title, item.desc, getDateFormat(item.date), item.id);
+        });
+    } else {
+        notesSort.forEach((item) => {
+            notesContainer.innerHTML += getNoteElement(item.title, item.desc, getDateFormat(item.date), item.id);
+        });
+    };
+
 };
 
 const delNote = (id) => {
@@ -83,4 +95,33 @@ form.addEventListener('submit', (event) => {
     submitBtn.disabled = true;
 
     renderNotes();
+});
+
+offSortBtn.addEventListener('click', () => {
+    isSort = false;
+    notesSort = [];
+    renderNotes();
+    offSortBtn.classList.add('active');
+    ascSortBtn.classList.remove('active');
+    dscSortBtn.classList.remove('active');
+});
+
+ascSortBtn.addEventListener('click', () => {
+    isSort = true;
+    notesSort = [...notes];
+    notesSort.sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+    renderNotes();
+    ascSortBtn.classList.add('active');
+    offSortBtn.classList.remove('active');
+    dscSortBtn.classList.remove('active');
+});
+
+dscSortBtn.addEventListener('click', () => {
+    isSort = true;
+    notesSort = [...notes];
+    notesSort.sort((a,b) => (a.title < b.title) ? 1 : ((b.title < a.title) ? -1 : 0));
+    renderNotes();
+    dscSortBtn.classList.add('active');
+    ascSortBtn.classList.remove('active');
+    offSortBtn.classList.remove('active');
 });
